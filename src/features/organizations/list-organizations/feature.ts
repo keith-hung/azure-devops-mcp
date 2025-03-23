@@ -83,22 +83,31 @@ export async function listOrganizations(
       },
     );
 
+    // Define the shape of the API response
+    interface AzureDevOpsOrganization {
+      accountId: string;
+      accountName: string;
+      accountUri: string;
+    }
+
     // Transform the response
-    return orgsResponse.data.value.map((org: any) => ({
+    return orgsResponse.data.value.map((org: AzureDevOpsOrganization) => ({
       id: org.accountId,
       name: org.accountName,
       url: org.accountUri,
     }));
   } catch (error) {
     // Handle profile API errors as authentication errors
-    if (
-      axios.isAxiosError(error) &&
-      error.config?.url?.includes('profiles/me')
-    ) {
+    if (axios.isAxiosError(error) && error.config?.url?.includes('profile')) {
       throw new AzureDevOpsAuthenticationError(
         `Authentication failed: ${error.message}`,
       );
-    } else if (error instanceof Error && error.message.includes('profile')) {
+    } else if (
+      error instanceof Error &&
+      (error.message.includes('profile') ||
+        error.message.includes('Unauthorized') ||
+        error.message.includes('Authentication'))
+    ) {
       throw new AzureDevOpsAuthenticationError(
         `Authentication failed: ${error.message}`,
       );
