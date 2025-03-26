@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.3](https://github.com/Tiberriver256/azure-devops-mcp/compare/v0.1.2...v0.1.3) (2025-03-26)
+
+
+### Features
+
+* Add npm publish to release.yml ([50d0368](https://github.com/Tiberriver256/azure-devops-mcp/commit/50d0368c090adc39a9b3ece67d198cabcd18c6ce))
+
+
+### Bug Fixes
+
+* Typo in release.yaml workflow ([e0de15f](https://github.com/Tiberriver256/azure-devops-mcp/commit/e0de15fd220ef2141466cf0530383921ed99253d))
+
 ### [0.1.2](https://github.com/Tiberriver256/azure-devops-mcp/compare/v0.1.1...v0.1.2) (2025-03-26)
 
 
