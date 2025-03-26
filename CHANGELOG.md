@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](https://github.com/Tiberriver256/azure-devops-mcp/compare/v0.1.3...v0.1.4) (2025-03-26)
+
+
+### Bug Fixes
+
+* resolve npm publish authentication and package content issues ([96e91d0](https://github.com/Tiberriver256/azure-devops-mcp/commit/96e91d04ec620ad77fc35fea31c2b7795fb73d9e))
+
 ### [0.1.3](https://github.com/Tiberriver256/azure-devops-mcp/compare/v0.1.2...v0.1.3) (2025-03-26)
 
 
