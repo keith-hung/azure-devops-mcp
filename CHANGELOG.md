@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/Tiberriver256/azure-devops-mcp/compare/v0.1.1...v0.1.2) (2025-03-26)
+
+
+### Bug Fixes
+
+* add tag_name parameter to GitHub release action ([68cfa43](https://github.com/Tiberriver256/azure-devops-mcp/commit/68cfa43839c5975cdf9c2ec8a5348ace6138d1c2))
+
 ### 0.1.1 (2025-03-26)
 
 
