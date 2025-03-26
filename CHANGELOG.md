@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.6](https://github.com/Tiberriver256/azure-devops-mcp/compare/v0.1.5...v0.1.6) (2025-03-26)
+
+
+### Bug Fixes
+
+* improve cross-platform CLI compatibility for Windows ([0f6ed3f](https://github.com/Tiberriver256/azure-devops-mcp/commit/0f6ed3fe7c72ba63ec5485047ce52e06278457ab))
+
 ### [0.1.5](https://github.com/Tiberriver256/azure-devops-mcp/compare/v0.1.4...v0.1.5) (2025-03-26)
 
 
