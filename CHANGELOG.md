@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.8](https://github.com/Tiberriver256/azure-devops-mcp/compare/v0.1.7...v0.1.8) (2025-03-26)
+
+
+### Bug Fixes
+
+* revert to direct execution of index.js to fix main module detection ([82efa90](https://github.com/Tiberriver256/azure-devops-mcp/commit/82efa90852f56db3a0b028ec50eb5230072da88a))
+
 ### [0.1.7](https://github.com/Tiberriver256/azure-devops-mcp/compare/v0.1.6...v0.1.7) (2025-03-26)
 
 
