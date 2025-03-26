@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.5](https://github.com/Tiberriver256/azure-devops-mcp/compare/v0.1.4...v0.1.5) (2025-03-26)
+
+
+### Bug Fixes
+
+* add bin field to make package executable with npx ([2d3d5fa](https://github.com/Tiberriver256/azure-devops-mcp/commit/2d3d5fa31a9ba741c4a85d7ef21d72ff46270695))
+
 ### [0.1.4](https://github.com/Tiberriver256/azure-devops-mcp/compare/v0.1.3...v0.1.4) (2025-03-26)
 
 
