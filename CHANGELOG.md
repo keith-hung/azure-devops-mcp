@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.9](https://github.com/Tiberriver256/mcp-server-azure-devops/compare/v0.1.8...v0.1.9) (2025-03-31)
+
+
+### Features
+
+* add pre-commit hook for prettier and eslint ([1b4ddff](https://github.com/Tiberriver256/mcp-server-azure-devops/commit/1b4ddff90e3c3ab9954d041398d224f03c632f63))
+* implement manage work item link handler ([72cd641](https://github.com/Tiberriver256/mcp-server-azure-devops/commit/72cd6419cf804eb0d72d5ba7763ad5b46bc35650))
+
+
+### Bug Fixes
+
+* add parent-child relationship support for createWorkItem ([31d5efe](https://github.com/Tiberriver256/mcp-server-azure-devops/commit/31d5efef49c162772e64eabd1e4012d8143dc270))
+* make AZURE_DEVOPS_AUTH_METHOD parameter case-insensitive ([9bbf53f](https://github.com/Tiberriver256/mcp-server-azure-devops/commit/9bbf53ffcc1a9170e6ba038fee182da0621be777))
+* restore tests/setup.ts to fix test suite ([5e23eab](https://github.com/Tiberriver256/mcp-server-azure-devops/commit/5e23eab1228f3949c431f1b8509ad5fbf829e528))
+
 ### [0.1.8](https://github.com/Tiberriver256/azure-devops-mcp/compare/v0.1.7...v0.1.8) (2025-03-26)
 
 
