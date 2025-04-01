@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.10](https://github.com/Tiberriver256/mcp-server-azure-devops/compare/v0.1.9...v0.1.10) (2025-04-01)
+
+
+### Features
+
+* add 'expand' option to get_work_item ([6bee365](https://github.com/Tiberriver256/mcp-server-azure-devops/commit/6bee365d9b37f7e197eaff03065e713ab0ee1c5f))
+
+
+### Bug Fixes
+
+* only request max 200 by default ([296de35](https://github.com/Tiberriver256/mcp-server-azure-devops/commit/296de3584346bd05c14dec3b39dff9a5ec0036a5))
+
 ### [0.1.9](https://github.com/Tiberriver256/mcp-server-azure-devops/compare/v0.1.8...v0.1.9) (2025-03-31)
 
 
