@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.11](https://github.com/Tiberriver256/mcp-server-azure-devops/compare/v0.1.10...v0.1.11) (2025-04-01)
+
+
+### Features
+
+* **search:** add code search functionality for Azure DevOps repos ([0680102](https://github.com/Tiberriver256/mcp-server-azure-devops/commit/068010236b10d8ed444ec01bd6820b27c5c9dcdc))
+
 ### [0.1.10](https://github.com/Tiberriver256/mcp-server-azure-devops/compare/v0.1.9...v0.1.10) (2025-04-01)
 
 
