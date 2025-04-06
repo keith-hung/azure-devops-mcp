@@ -179,6 +179,10 @@ For comprehensive documentation on all tools, see the [Tools Documentation](docs
 
 Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=tiberriver256/mcp-server-azure-devops&type=Date)](https://www.star-history.com/#tiberriver256/mcp-server-azure-devops&Date)
+
 ## License
 
 MIT
