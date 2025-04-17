@@ -77,7 +77,12 @@ import {
   createPullRequest,
 } from './features/pull-requests';
 
-import { ListPipelinesSchema, listPipelines } from './features/pipelines';
+import {
+  ListPipelinesSchema,
+  listPipelines,
+  GetPipelineSchema,
+  getPipeline,
+} from './features/pipelines';
 
 import { GitVersionType } from 'azure-devops-node-api/interfaces/GitInterfaces';
 
@@ -181,6 +186,11 @@ export function createAzureDevOpsServer(config: AzureDevOpsConfig): Server {
           name: 'list_pipelines',
           description: 'List pipelines in a project',
           inputSchema: zodToJsonSchema(ListPipelinesSchema),
+        },
+        {
+          name: 'get_pipeline',
+          description: 'Get details of a specific pipeline',
+          inputSchema: zodToJsonSchema(GetPipelineSchema),
         },
         // Repository tools
         {
@@ -540,6 +550,17 @@ export function createAzureDevOpsServer(config: AzureDevOpsConfig): Server {
           const result = await listPipelines(connection, {
             ...args,
             projectId: args.projectId ?? defaultProject,
+          });
+          return {
+            content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
+          };
+        }
+        case 'get_pipeline': {
+          const args = GetPipelineSchema.parse(request.params.arguments);
+          const result = await getPipeline(connection, {
+            projectId: args.projectId ?? defaultProject,
+            pipelineId: args.pipelineId,
+            pipelineVersion: args.pipelineVersion,
           });
           return {
             content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],

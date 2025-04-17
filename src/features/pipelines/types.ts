@@ -11,4 +11,13 @@ export interface ListPipelinesOptions {
   continuationToken?: string;
 }
 
+/**
+ * Options for getting a pipeline
+ */
+export interface GetPipelineOptions {
+  projectId: string;
+  pipelineId: number;
+  pipelineVersion?: number;
+}
+
 export { Pipeline };

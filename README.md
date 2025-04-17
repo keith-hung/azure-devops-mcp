@@ -47,7 +47,6 @@ The server is structured around the Model Context Protocol (MCP) for communicati
 
 To integrate with Claude Desktop or Cursor AI, add one of the following configurations to your configuration file.
 
-
 #### Azure Identity Authentication
 
 Be sure you are logged in to Azure CLI with `az login` then add the following:
@@ -67,7 +66,6 @@ Be sure you are logged in to Azure CLI with `az login` then add the following:
   }
 }
 ```
-
 
 #### Personal Access Token (PAT) Authentication
 
@@ -90,7 +88,6 @@ Be sure you are logged in to Azure CLI with `az login` then add the following:
 
 For detailed configuration instructions and more authentication options, see the [Authentication Guide](docs/authentication.md).
 
-
 ## Authentication Methods
 
 This server supports multiple authentication methods for connecting to Azure DevOps APIs. For detailed setup instructions, configuration examples, and troubleshooting tips, see the [Authentication Guide](docs/authentication.md).
@@ -109,17 +106,17 @@ For a complete list of environment variables and their descriptions, see the [Au
 
 Key environment variables include:
 
-| Variable                       | Description                                                                        | Required           | Default            |
-| ------------------------------ | ---------------------------------------------------------------------------------- | ------------------ | ------------------ |
-| `AZURE_DEVOPS_AUTH_METHOD`     | Authentication method (`pat`, `azure-identity`, or `azure-cli`) - case-insensitive | No                 | `azure-identity`   |
-| `AZURE_DEVOPS_ORG_URL`         | Full URL to your Azure DevOps organization                                         | Yes                | -                  |
-| `AZURE_DEVOPS_PAT`             | Personal Access Token (for PAT auth)                                               | Only with PAT auth | -                  |
-| `AZURE_DEVOPS_DEFAULT_PROJECT` | Default project if none specified                                                  | No                 | -                  |
-| `AZURE_DEVOPS_API_VERSION`     | API version to use                                                                 | No                 | Latest             |
-| `AZURE_TENANT_ID`              | Azure AD tenant ID (for service principals)                                        | Only with service principals | -                  |
-| `AZURE_CLIENT_ID`              | Azure AD application ID (for service principals)                                   | Only with service principals | -                  |
-| `AZURE_CLIENT_SECRET`          | Azure AD client secret (for service principals)                                    | Only with service principals | -                  |
-| `LOG_LEVEL`                    | Logging level (debug, info, warn, error)                                           | No                 | info               |
+| Variable                       | Description                                                                        | Required                     | Default          |
+| ------------------------------ | ---------------------------------------------------------------------------------- | ---------------------------- | ---------------- |
+| `AZURE_DEVOPS_AUTH_METHOD`     | Authentication method (`pat`, `azure-identity`, or `azure-cli`) - case-insensitive | No                           | `azure-identity` |
+| `AZURE_DEVOPS_ORG_URL`         | Full URL to your Azure DevOps organization                                         | Yes                          | -                |
+| `AZURE_DEVOPS_PAT`             | Personal Access Token (for PAT auth)                                               | Only with PAT auth           | -                |
+| `AZURE_DEVOPS_DEFAULT_PROJECT` | Default project if none specified                                                  | No                           | -                |
+| `AZURE_DEVOPS_API_VERSION`     | API version to use                                                                 | No                           | Latest           |
+| `AZURE_TENANT_ID`              | Azure AD tenant ID (for service principals)                                        | Only with service principals | -                |
+| `AZURE_CLIENT_ID`              | Azure AD application ID (for service principals)                                   | Only with service principals | -                |
+| `AZURE_CLIENT_SECRET`          | Azure AD client secret (for service principals)                                    | Only with service principals | -                |
+| `LOG_LEVEL`                    | Logging level (debug, info, warn, error)                                           | No                           | info             |
 
 ## Troubleshooting Authentication
 
@@ -174,6 +171,11 @@ The Azure DevOps MCP server provides a variety of tools for interacting with Azu
 - `search_code`: Search for code across repositories in a project
 - `search_wiki`: Search for content across wiki pages in a project
 - `search_work_items`: Search for work items across projects in Azure DevOps
+
+### Pipelines Tools
+
+- list_pipelines: List pipelines in a project
+- get_pipeline: Get details of a specific pipeline
 
 For comprehensive documentation on all tools, see the [Tools Documentation](docs/tools/).
 
