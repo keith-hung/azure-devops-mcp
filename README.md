@@ -176,6 +176,7 @@ The Azure DevOps MCP server provides a variety of tools for interacting with Azu
 
 - list_pipelines: List pipelines in a project
 - get_pipeline: Get details of a specific pipeline
+- trigger_pipeline: Trigger a pipeline run with customizable parameters
 
 For comprehensive documentation on all tools, see the [Tools Documentation](docs/tools/).
 

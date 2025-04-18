@@ -1,5 +1,8 @@
 // Re-export the Pipeline interface from the Azure DevOps API
-import { Pipeline } from 'azure-devops-node-api/interfaces/PipelinesInterfaces';
+import {
+  Pipeline,
+  Run,
+} from 'azure-devops-node-api/interfaces/PipelinesInterfaces';
 
 /**
  * Options for listing pipelines
@@ -16,8 +19,21 @@ export interface ListPipelinesOptions {
  */
 export interface GetPipelineOptions {
   projectId: string;
+  organizationId?: string;
   pipelineId: number;
   pipelineVersion?: number;
 }
 
-export { Pipeline };
+/**
+ * Options for triggering a pipeline
+ */
+export interface TriggerPipelineOptions {
+  projectId: string;
+  pipelineId: number;
+  branch?: string;
+  variables?: Record<string, { value: string; isSecret?: boolean }>;
+  templateParameters?: Record<string, string>;
+  stagesToSkip?: string[];
+}
+
+export { Pipeline, Run };

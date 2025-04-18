@@ -82,6 +82,8 @@ import {
   listPipelines,
   GetPipelineSchema,
   getPipeline,
+  TriggerPipelineSchema,
+  triggerPipeline,
 } from './features/pipelines';
 
 import { GitVersionType } from 'azure-devops-node-api/interfaces/GitInterfaces';
@@ -191,6 +193,11 @@ export function createAzureDevOpsServer(config: AzureDevOpsConfig): Server {
           name: 'get_pipeline',
           description: 'Get details of a specific pipeline',
           inputSchema: zodToJsonSchema(GetPipelineSchema),
+        },
+        {
+          name: 'trigger_pipeline',
+          description: 'Trigger a pipeline run',
+          inputSchema: zodToJsonSchema(TriggerPipelineSchema),
         },
         // Repository tools
         {
@@ -561,6 +568,20 @@ export function createAzureDevOpsServer(config: AzureDevOpsConfig): Server {
             projectId: args.projectId ?? defaultProject,
             pipelineId: args.pipelineId,
             pipelineVersion: args.pipelineVersion,
+          });
+          return {
+            content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
+          };
+        }
+        case 'trigger_pipeline': {
+          const args = TriggerPipelineSchema.parse(request.params.arguments);
+          const result = await triggerPipeline(connection, {
+            projectId: args.projectId ?? defaultProject,
+            pipelineId: args.pipelineId,
+            branch: args.branch,
+            variables: args.variables,
+            templateParameters: args.templateParameters,
+            stagesToSkip: args.stagesToSkip,
           });
           return {
             content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
