@@ -8,6 +8,7 @@ This directory contains documentation for all tools available in the Azure DevOp
   - [Organizations](./organizations.md) - Tools for working with organizations
   - [Projects](./projects.md) - Tools for working with projects
   - [Repositories](./repositories.md) - Tools for working with Git repositories
+  - [Pull Requests](./pull-requests.md) - Tools for working with pull requests
   - [Work Items](./work-items.md) - Tools for working with work items
   - [Pipelines](./pipelines.md) - Tools for working with pipelines
 - [Resource URIs](./resources.md) - Documentation for accessing repository content via resource URIs
@@ -29,6 +30,11 @@ This directory contains documentation for all tools available in the Azure DevOp
 - [`get_repository`](./repositories.md#get_repository) - Get details of a specific repository
 - [`get_repository_details`](./repositories.md#get_repository_details) - Get detailed information about a repository
 - [`get_file_content`](./repositories.md#get_file_content) - Get content of a file or directory from a repository
+
+### Pull Request Tools
+
+- [`create_pull_request`](./pull-requests.md#create_pull_request) - Create a new pull request
+- [`list_pull_requests`](./pull-requests.md#list_pull_requests) - List pull requests in a repository
 
 ### Work Item Tools
 

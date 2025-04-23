@@ -75,6 +75,8 @@ import { GetMeSchema, getMe } from './features/users';
 import {
   CreatePullRequestSchema,
   createPullRequest,
+  ListPullRequestsSchema,
+  listPullRequests,
 } from './features/pull-requests';
 
 import {
@@ -262,6 +264,11 @@ export function createAzureDevOpsServer(config: AzureDevOpsConfig): Server {
           name: 'create_pull_request',
           description: 'Create a new pull request',
           inputSchema: zodToJsonSchema(CreatePullRequestSchema),
+        },
+        {
+          name: 'list_pull_requests',
+          description: 'List pull requests in a repository',
+          inputSchema: zodToJsonSchema(ListPullRequestsSchema),
         },
         // Wiki tools
         {
@@ -750,6 +757,27 @@ export function createAzureDevOpsServer(config: AzureDevOpsConfig): Server {
             args.projectId ?? defaultProject,
             args.repositoryId,
             args,
+          );
+          return {
+            content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
+          };
+        }
+        case 'list_pull_requests': {
+          const params = ListPullRequestsSchema.parse(request.params.arguments);
+          const result = await listPullRequests(
+            connection,
+            params.projectId ?? defaultProject,
+            params.repositoryId,
+            {
+              projectId: params.projectId ?? defaultProject,
+              repositoryId: params.repositoryId,
+              status: params.status,
+              creatorId: params.creatorId,
+              reviewerId: params.reviewerId,
+              sourceRefName: params.sourceRefName,
+              targetRefName: params.targetRefName,
+              top: params.top,
+            },
           );
           return {
             content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],

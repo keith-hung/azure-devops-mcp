@@ -174,14 +174,19 @@ The Azure DevOps MCP server provides a variety of tools for interacting with Azu
 
 ### Pipelines Tools
 
-- list_pipelines: List pipelines in a project
-- get_pipeline: Get details of a specific pipeline
-- trigger_pipeline: Trigger a pipeline run with customizable parameters
+- `list_pipelines`: List pipelines in a project
+- `get_pipeline`: Get details of a specific pipeline
+- `trigger_pipeline`: Trigger a pipeline run with customizable parameters
 
 ### Wiki Tools
 
 - `get_wikis`: List all wikis in a project
 - `get_wiki_page`: Get content of a specific wiki page as plain text
+
+### Pull Requests Tools
+
+- `create_pull_request`: Create a new pull request between branches in a repository
+- `list_pull_requests`: List and filter pull requests in a project or repository
 
 For comprehensive documentation on all tools, see the [Tools Documentation](docs/tools/).
 

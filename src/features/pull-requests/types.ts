@@ -28,7 +28,6 @@ export interface ListPullRequestsOptions {
   sourceRefName?: string;
   targetRefName?: string;
   top?: number;
-  skip?: number;
 }
 
 /**

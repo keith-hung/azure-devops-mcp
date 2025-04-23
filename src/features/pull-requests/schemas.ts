@@ -42,3 +42,30 @@ export const CreatePullRequestSchema = z.object({
     .optional()
     .describe('Additional properties to set on the pull request'),
 });
+
+/**
+ * Schema for listing pull requests
+ */
+export const ListPullRequestsSchema = z.object({
+  projectId: z
+    .string()
+    .optional()
+    .describe(`The ID or name of the project (Default: ${defaultProject})`),
+  organizationId: z
+    .string()
+    .optional()
+    .describe(`The ID or name of the organization (Default: ${defaultOrg})`),
+  repositoryId: z.string().describe('The ID or name of the repository'),
+  status: z
+    .enum(['all', 'active', 'completed', 'abandoned'])
+    .optional()
+    .describe('Filter by pull request status'),
+  creatorId: z.string().optional().describe('Filter by creator ID or email'),
+  reviewerId: z.string().optional().describe('Filter by reviewer ID or email'),
+  sourceRefName: z.string().optional().describe('Filter by source branch name'),
+  targetRefName: z.string().optional().describe('Filter by target branch name'),
+  top: z
+    .number()
+    .optional()
+    .describe('Maximum number of pull requests to return'),
+});

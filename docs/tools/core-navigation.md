@@ -9,8 +9,10 @@ Azure DevOps resources are organized in a hierarchical structure:
 ```
 Organizations
 └── Projects
-    └── Repositories
-        └── Branches, Files, etc.
+    ├── Repositories
+    │   └── Branches, Files, etc.
+    │   └── Pull Requests
+    └── Work Items
 ```
 
 The core navigation tools allow you to explore this hierarchy from top to bottom.
@@ -22,6 +24,7 @@ The core navigation tools allow you to explore this hierarchy from top to bottom
 | [`list_organizations`](./organizations.md#list_organizations) | Lists all Azure DevOps organizations accessible to the user | None                | None                                      |
 | [`list_projects`](./projects.md#list_projects)                | Lists all projects in the organization                      | None                | stateFilter, top, skip, continuationToken |
 | [`list_repositories`](./repositories.md#list_repositories)    | Lists all repositories in a project                         | projectId           | includeLinks                              |
+| [`list_pull_requests`](./pull-requests.md#list_pull_requests) | Lists pull requests in a repository                         | projectId, repositoryId | status, creatorId, reviewerId, etc.    |
 
 ## Common Use Cases
 
@@ -32,6 +35,7 @@ A common workflow is to navigate the hierarchy to discover resources:
 1. Use `list_organizations` to find available organizations
 2. Use `list_projects` to find projects in a selected organization
 3. Use `list_repositories` to find repositories in a selected project
+4. Use `list_pull_requests` to find pull requests in a selected repository
 
 Example:
 
@@ -47,6 +51,14 @@ const myProject = projects[0]; // Use the first project for this example
 // Step 3: Get all repositories in the project
 const repositories = await mcpClient.callTool('list_repositories', {
   projectId: myProject.name,
+});
+const myRepo = repositories[0]; // Use the first repository for this example
+
+// Step 4: Get all active pull requests in the repository
+const pullRequests = await mcpClient.callTool('list_pull_requests', {
+  projectId: myProject.name,
+  repositoryId: myRepo.name,
+  status: 'active'
 });
 ```
 
@@ -86,6 +98,8 @@ For detailed information about each tool, including parameters, response format,
 - [list_organizations](./organizations.md#list_organizations)
 - [list_projects](./projects.md#list_projects)
 - [list_repositories](./repositories.md#list_repositories)
+- [list_pull_requests](./pull-requests.md#list_pull_requests)
+- [create_pull_request](./pull-requests.md#create_pull_request)
 
 ## Error Handling
 
