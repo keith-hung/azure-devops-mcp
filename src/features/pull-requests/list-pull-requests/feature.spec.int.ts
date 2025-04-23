@@ -26,7 +26,7 @@ describe('listPullRequests integration', () => {
 
     // Set up project and repository names from environment
     projectName = process.env.AZURE_DEVOPS_DEFAULT_PROJECT || 'DefaultProject';
-    repositoryName = process.env.AZURE_DEVOPS_TEST_REPOSITORY_ID || '';
+    repositoryName = process.env.AZURE_DEVOPS_DEFAULT_REPOSITORY || '';
 
     // Skip setup if integration tests should be skipped
     if (shouldSkipIntegrationTest() || !connection) {
