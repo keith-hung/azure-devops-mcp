@@ -112,8 +112,6 @@ export const handleWikisRequest: RequestHandler = async (
         organizationId: args.organizationId ?? defaultOrg,
         projectId: args.projectId ?? defaultProject,
         wikiId: args.wikiId,
-        path: args.path,
-        recursionLevel: args.recursionLevel,
       });
       return {
         content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
