@@ -1,4 +1,4 @@
-[Microsoft launched an official ADO MCP Server! 🎉🎉🎉](https://github.com/Tiberriver256/mcp-server-azure-devops/discussions/237)
+# ℹ️ DISCUSSION: [Microsoft launched an official ADO MCP Server! 🎉🎉🎉](https://github.com/Tiberriver256/mcp-server-azure-devops/discussions/237)
 
 # Azure DevOps MCP Server
 
