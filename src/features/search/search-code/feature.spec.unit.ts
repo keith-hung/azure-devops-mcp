@@ -34,7 +34,7 @@ describe('searchCode unit', () => {
       }),
     })),
     _getHttpClient: jest.fn().mockReturnValue({
-      getAuthorizationHeader: jest.fn().mockReturnValue('Bearer mock-token'),
+      // Mock HTTP client - no longer need getAuthorizationHeader
     }),
     getCoreApi: jest.fn().mockImplementation(() => ({
       getProjects: jest

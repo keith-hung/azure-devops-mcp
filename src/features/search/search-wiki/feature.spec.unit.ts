@@ -23,7 +23,7 @@ describe('searchWiki unit', () => {
   // Mock WebApi connection
   const mockConnection = {
     _getHttpClient: jest.fn().mockReturnValue({
-      getAuthorizationHeader: jest.fn().mockReturnValue('Bearer mock-token'),
+      // Mock HTTP client - no longer need getAuthorizationHeader
     }),
     getCoreApi: jest.fn().mockImplementation(() => ({
       getProjects: jest
