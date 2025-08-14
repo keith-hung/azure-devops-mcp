@@ -167,7 +167,7 @@ export const handlePullRequestsRequest: RequestHandler = async (
         ...params,
         projectId: params.projectId ?? defaultProject,
       };
-      const result = await updatePullRequest(fixedParams);
+      const result = await updatePullRequest(connection, fixedParams);
       return {
         content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
       };

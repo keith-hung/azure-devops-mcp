@@ -4,19 +4,19 @@ import {
   WorkItemRelation,
   WorkItemExpand,
 } from 'azure-devops-node-api/interfaces/WorkItemTrackingInterfaces';
-import { AzureDevOpsClient } from '../../../shared/auth/client-factory';
 import { AzureDevOpsError } from '../../../shared/errors';
 import { UpdatePullRequestOptions } from '../types';
-import { AuthenticationMethod } from '../../../shared/auth/auth-factory';
 import { pullRequestStatusMapper } from '../../../shared/enums';
 
 /**
  * Updates an existing pull request in Azure DevOps with the specified changes.
  *
+ * @param connection The Azure DevOps WebApi connection
  * @param options - The options for updating the pull request
  * @returns The updated pull request
  */
 export const updatePullRequest = async (
+  connection: WebApi,
   options: UpdatePullRequestOptions,
 ): Promise<GitPullRequest> => {
   const {
@@ -35,15 +35,6 @@ export const updatePullRequest = async (
   } = options;
 
   try {
-    // Get connection to Azure DevOps
-    const client = new AzureDevOpsClient({
-      method:
-        (process.env.AZURE_DEVOPS_AUTH_METHOD as AuthenticationMethod) ?? 'pat',
-      organizationUrl: process.env.AZURE_DEVOPS_ORG_URL ?? '',
-      personalAccessToken: process.env.AZURE_DEVOPS_PAT,
-    });
-    const connection = await client.getWebApiClient();
-
     // Get the Git API client
     const gitApi = await connection.getGitApi();
 

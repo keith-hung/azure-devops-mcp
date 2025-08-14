@@ -149,7 +149,7 @@ describe('updatePullRequest integration', () => {
 
     const updatedDescription = 'Updated description for integration testing';
 
-    const result = await updatePullRequest({
+    const result = await updatePullRequest(connection!, {
       projectId: projectName,
       repositoryId: repositoryName,
       pullRequestId,
@@ -172,7 +172,7 @@ describe('updatePullRequest integration', () => {
     }
 
     // Mark as not a draft
-    const result = await updatePullRequest({
+    const result = await updatePullRequest(connection!, {
       projectId: projectName,
       repositoryId: repositoryName,
       pullRequestId,
@@ -193,7 +193,7 @@ describe('updatePullRequest integration', () => {
     }
 
     // Add the work item link
-    const result = await updatePullRequest({
+    const result = await updatePullRequest(connection!, {
       projectId: projectName,
       repositoryId: repositoryName,
       pullRequestId,
@@ -237,7 +237,7 @@ describe('updatePullRequest integration', () => {
 
     // First ensure the work item is linked
     try {
-      await updatePullRequest({
+      await updatePullRequest(connection!, {
         projectId: projectName,
         repositoryId: repositoryName,
         pullRequestId,
@@ -255,7 +255,7 @@ describe('updatePullRequest integration', () => {
     }
 
     // Then remove the work item link
-    const result = await updatePullRequest({
+    const result = await updatePullRequest(connection!, {
       projectId: projectName,
       repositoryId: repositoryName,
       pullRequestId,
@@ -310,7 +310,7 @@ describe('updatePullRequest integration', () => {
     const reviewer = pullRequest.createdBy!.id!;
 
     // Add the reviewer
-    const result = await updatePullRequest({
+    const result = await updatePullRequest(connection!, {
       projectId: projectName,
       repositoryId: repositoryName,
       pullRequestId,
@@ -364,7 +364,7 @@ describe('updatePullRequest integration', () => {
 
     // First ensure the reviewer is added
     try {
-      await updatePullRequest({
+      await updatePullRequest(connection!, {
         projectId: projectName,
         repositoryId: repositoryName,
         pullRequestId,
@@ -382,7 +382,7 @@ describe('updatePullRequest integration', () => {
     }
 
     // Then remove the reviewer
-    const result = await updatePullRequest({
+    const result = await updatePullRequest(connection!, {
       projectId: projectName,
       repositoryId: repositoryName,
       pullRequestId,
@@ -422,7 +422,7 @@ describe('updatePullRequest integration', () => {
     const customProperty = 'autoComplete';
     const customValue = true;
 
-    const result = await updatePullRequest({
+    const result = await updatePullRequest(connection!, {
       projectId: projectName,
       repositoryId: repositoryName,
       pullRequestId,
@@ -450,7 +450,7 @@ describe('updatePullRequest integration', () => {
 
     // Abandon the pull request instead of completing it
     // Completing requires additional setup that's complex for integration tests
-    const result = await updatePullRequest({
+    const result = await updatePullRequest(connection!, {
       projectId: projectName,
       repositoryId: repositoryName,
       pullRequestId,
