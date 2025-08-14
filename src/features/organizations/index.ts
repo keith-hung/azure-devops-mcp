@@ -15,8 +15,6 @@ import {
   RequestHandler,
 } from '../../shared/types/request-handler';
 import { listOrganizations } from './list-organizations';
-import { AzureDevOpsConfig } from '../../shared/types';
-import { AuthenticationMethod } from '../../shared/auth';
 
 /**
  * Checks if the request is for the organizations feature
@@ -37,21 +35,7 @@ export const handleOrganizationsRequest: RequestHandler = async (
 ): Promise<{ content: Array<{ type: string; text: string }> }> => {
   switch (request.params.name) {
     case 'list_organizations': {
-      // Use environment variables for authentication method and PAT
-      // This matches how other features handle authentication
-      const config: AzureDevOpsConfig = {
-        authMethod:
-          process.env.AZURE_DEVOPS_AUTH_METHOD?.toLowerCase() === 'pat'
-            ? AuthenticationMethod.PersonalAccessToken
-            : process.env.AZURE_DEVOPS_AUTH_METHOD?.toLowerCase() ===
-                'azure-cli'
-              ? AuthenticationMethod.AzureCli
-              : AuthenticationMethod.AzureIdentity,
-        personalAccessToken: process.env.AZURE_DEVOPS_PAT,
-        organizationUrl: connection.serverUrl || '',
-      };
-
-      const result = await listOrganizations(config);
+      const result = await listOrganizations(connection);
       return {
         content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
       };

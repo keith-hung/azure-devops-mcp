@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { WebApi } from 'azure-devops-node-api';
 import * as azureDevOpsClient from '../../../clients/azure-devops';
 import { handleRequestError } from '../../../shared/errors/handle-request-error';
 import { CreateWikiPageSchema } from './schema';
@@ -8,10 +9,12 @@ import { defaultOrg, defaultProject } from '../../../utils/environment';
  * Creates a new wiki page in Azure DevOps.
  * If a page already exists at the specified path, it will be updated.
  *
+ * @param connection - The Azure DevOps WebApi connection
  * @param {z.infer<typeof CreateWikiPageSchema>} params - The parameters for creating the wiki page.
  * @returns {Promise<any>} A promise that resolves with the API response.
  */
 export const createWikiPage = async (
+  _connection: WebApi, // TODO: Use this connection for REST API calls
   params: z.infer<typeof CreateWikiPageSchema>,
   client?: {
     defaults?: { organizationId?: string; projectId?: string };
@@ -63,7 +66,8 @@ export const createWikiPage = async (
         );
       }
 
-      // Create the client
+      // TODO: Use connection.rest API calls instead of legacy client
+      // For now, use the legacy client implementation
       const wikiClient = await azureDevOpsClient.getWikiClient({
         organizationId: org,
       });

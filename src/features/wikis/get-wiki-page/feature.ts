@@ -1,3 +1,4 @@
+import { WebApi } from 'azure-devops-node-api';
 import * as azureDevOpsClient from '../../../clients/azure-devops';
 import { AzureDevOpsError } from '../../../shared/errors/azure-devops-errors';
 
@@ -31,6 +32,7 @@ export interface GetWikiPageOptions {
 /**
  * Get a wiki page from a wiki
  *
+ * @param connection The Azure DevOps WebApi connection
  * @param options Options for getting a wiki page
  * @returns Wiki page content as text/plain
  * @throws {AzureDevOpsResourceNotFoundError} When the wiki page is not found
@@ -38,12 +40,14 @@ export interface GetWikiPageOptions {
  * @throws {AzureDevOpsError} When an error occurs while fetching the wiki page
  */
 export async function getWikiPage(
+  _connection: WebApi, // TODO: Use this connection for REST API calls
   options: GetWikiPageOptions,
 ): Promise<string> {
   const { organizationId, projectId, wikiId, pagePath } = options;
 
   try {
-    // Create the client
+    // TODO: Use connection.rest API calls instead of legacy client
+    // For now, use the legacy client implementation
     const client = await azureDevOpsClient.getWikiClient({
       organizationId,
     });

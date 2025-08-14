@@ -1,57 +1,29 @@
 import axios from 'axios';
-import { AzureDevOpsConfig } from '../../../shared/types';
+import { WebApi } from 'azure-devops-node-api';
 import {
   AzureDevOpsAuthenticationError,
   AzureDevOpsError,
 } from '../../../shared/errors';
-import { DefaultAzureCredential, AzureCliCredential } from '@azure/identity';
-import { AuthenticationMethod } from '../../../shared/auth';
-import { Organization, AZURE_DEVOPS_RESOURCE_ID } from '../types';
+import { Organization } from '../types';
 
 /**
  * Lists all Azure DevOps organizations accessible to the authenticated user
  *
  * Note: This function uses Axios directly rather than the Azure DevOps Node API
  * because the WebApi client doesn't support the organizations endpoint.
+ * It extracts authentication information from the existing WebApi connection.
  *
- * @param config The Azure DevOps configuration
+ * @param connection The Azure DevOps WebApi connection
  * @returns Array of organizations
  * @throws {AzureDevOpsAuthenticationError} If authentication fails
  */
 export async function listOrganizations(
-  config: AzureDevOpsConfig,
+  connection: WebApi,
 ): Promise<Organization[]> {
   try {
-    // Determine auth method and create appropriate authorization header
-    let authHeader: string;
-
-    if (config.authMethod === AuthenticationMethod.PersonalAccessToken) {
-      // PAT authentication
-      if (!config.personalAccessToken) {
-        throw new AzureDevOpsAuthenticationError(
-          'Personal Access Token (PAT) is required when using PAT authentication',
-        );
-      }
-      authHeader = createBasicAuthHeader(config.personalAccessToken);
-    } else {
-      // Azure Identity authentication (DefaultAzureCredential or AzureCliCredential)
-      const credential =
-        config.authMethod === AuthenticationMethod.AzureCli
-          ? new AzureCliCredential()
-          : new DefaultAzureCredential();
-
-      const token = await credential.getToken(
-        `${AZURE_DEVOPS_RESOURCE_ID}/.default`,
-      );
-
-      if (!token || !token.token) {
-        throw new AzureDevOpsAuthenticationError(
-          'Failed to acquire Azure Identity token',
-        );
-      }
-
-      authHeader = `Bearer ${token.token}`;
-    }
+    // Extract authorization header from the WebApi connection
+    // This function uses the internal connection details to get the auth header
+    const authHeader = await getAuthHeaderFromConnection(connection);
 
     // Step 1: Get the user profile to get the publicAlias
     const profileResponse = await axios.get(
@@ -119,6 +91,68 @@ export async function listOrganizations(
 
     throw new AzureDevOpsAuthenticationError(
       `Failed to list organizations: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+}
+
+/**
+ * Extracts authorization header from WebApi connection
+ * This is a workaround since the organizations endpoint is not available in the Azure DevOps Node API
+ *
+ * @param connection The WebApi connection
+ * @returns Authorization header value
+ */
+async function getAuthHeaderFromConnection(
+  connection: WebApi,
+): Promise<string> {
+  try {
+    // Access the internal authentication handler from the connection
+    // This is a workaround to get the auth header for direct API calls
+    const authHandler = (connection as any).authHandler;
+
+    if (!authHandler) {
+      throw new AzureDevOpsAuthenticationError(
+        'Unable to extract authentication information from connection',
+      );
+    }
+
+    // Get the organization URL from the connection
+    const serverUrl =
+      (connection as any).serverUrl || (connection as any).baseUrl;
+
+    if (!serverUrl) {
+      throw new AzureDevOpsAuthenticationError(
+        'Unable to determine server URL from connection',
+      );
+    }
+
+    // For PAT authentication, create Basic Auth header
+    if (authHandler.token) {
+      return createBasicAuthHeader(authHandler.token);
+    }
+
+    // For bearer token authentication
+    if (authHandler.accessToken) {
+      return `Bearer ${authHandler.accessToken}`;
+    }
+
+    // For username/password authentication, create Basic Auth header
+    if (authHandler.username && authHandler.password) {
+      const credentials = Buffer.from(
+        `${authHandler.username}:${authHandler.password}`,
+      ).toString('base64');
+      return `Basic ${credentials}`;
+    }
+
+    throw new AzureDevOpsAuthenticationError(
+      'Unable to determine authentication method from connection',
+    );
+  } catch (error) {
+    if (error instanceof AzureDevOpsAuthenticationError) {
+      throw error;
+    }
+    throw new AzureDevOpsAuthenticationError(
+      `Failed to extract authentication from connection: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
