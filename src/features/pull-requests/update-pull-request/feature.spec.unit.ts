@@ -1,9 +1,6 @@
 import { updatePullRequest } from './feature';
-import { AzureDevOpsClient } from '../../../shared/auth/client-factory';
 import { AzureDevOpsError } from '../../../shared/errors';
-
-// Mock the AzureDevOpsClient
-jest.mock('../../../shared/auth/client-factory');
+import { WebApi } from 'azure-devops-node-api';
 
 describe('updatePullRequest', () => {
   const mockGetPullRequestById = jest.fn();
@@ -29,25 +26,17 @@ describe('updatePullRequest', () => {
     getWorkItemTrackingApi: jest
       .fn()
       .mockResolvedValue(mockWorkItemTrackingApi),
-  };
-
-  const mockAzureDevopsClient = {
-    getWebApiClient: jest.fn().mockResolvedValue(mockConnection),
-    // ...other properties if needed
-  };
+  } as unknown as WebApi;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (AzureDevOpsClient as unknown as jest.Mock).mockImplementation(
-      () => mockAzureDevopsClient,
-    );
   });
 
   it('should throw error when pull request does not exist', async () => {
     mockGetPullRequestById.mockResolvedValueOnce(null);
 
     await expect(
-      updatePullRequest({
+      updatePullRequest(mockConnection, {
         projectId: 'project-1',
         repositoryId: 'repo1',
         pullRequestId: 123,
@@ -65,7 +54,7 @@ describe('updatePullRequest', () => {
       description: 'Updated Description',
     });
 
-    const result = await updatePullRequest({
+    const result = await updatePullRequest(mockConnection, {
       projectId: 'project-1',
       repositoryId: 'repo1',
       pullRequestId: 123,
@@ -98,7 +87,7 @@ describe('updatePullRequest', () => {
       status: 2, // Abandoned
     });
 
-    const result = await updatePullRequest({
+    const result = await updatePullRequest(mockConnection, {
       projectId: 'project-1',
       repositoryId: 'repo1',
       pullRequestId: 123,
@@ -125,7 +114,7 @@ describe('updatePullRequest', () => {
     });
 
     await expect(
-      updatePullRequest({
+      updatePullRequest(mockConnection, {
         projectId: 'project-1',
         repositoryId: 'repo1',
         pullRequestId: 123,
@@ -143,7 +132,7 @@ describe('updatePullRequest', () => {
       isDraft: true,
     });
 
-    const result = await updatePullRequest({
+    const result = await updatePullRequest(mockConnection, {
       projectId: 'project-1',
       repositoryId: 'repo1',
       pullRequestId: 123,
@@ -174,7 +163,7 @@ describe('updatePullRequest', () => {
       customProperty: 'custom value',
     });
 
-    const result = await updatePullRequest({
+    const result = await updatePullRequest(mockConnection, {
       projectId: 'project-1',
       repositoryId: 'repo1',
       pullRequestId: 123,
@@ -238,7 +227,7 @@ describe('updatePullRequest', () => {
       ],
     });
 
-    await updatePullRequest({
+    await updatePullRequest(mockConnection, {
       projectId: 'project-1',
       repositoryId: 'repo1',
       pullRequestId: 123,
@@ -283,7 +272,7 @@ describe('updatePullRequest', () => {
     mockGetPullRequestById.mockRejectedValueOnce(new Error('Unexpected'));
 
     await expect(
-      updatePullRequest({
+      updatePullRequest(mockConnection, {
         projectId: 'project-1',
         repositoryId: 'repo1',
         pullRequestId: 123,
