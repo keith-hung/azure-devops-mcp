@@ -2,6 +2,7 @@ import { WebApi, getPersonalAccessTokenHandler } from 'azure-devops-node-api';
 import { BearerCredentialHandler } from 'azure-devops-node-api/handlers/bearertoken';
 import { DefaultAzureCredential, AzureCliCredential } from '@azure/identity';
 import { AzureDevOpsAuthenticationError } from '../errors';
+import { UsernamePasswordAuthHandler } from './username-password-auth-handler';
 
 /**
  * Authentication methods supported by the Azure DevOps client
@@ -11,6 +12,11 @@ export enum AuthenticationMethod {
    * Personal Access Token authentication
    */
   PersonalAccessToken = 'pat',
+
+  /**
+   * Username/Password authentication for TFS/Azure DevOps Server on-premises
+   */
+  UsernamePassword = 'username-password',
 
   /**
    * Azure Identity authentication (DefaultAzureCredential)
@@ -41,6 +47,17 @@ export interface AuthConfig {
    * Personal Access Token for Azure DevOps (required for PAT authentication)
    */
   personalAccessToken?: string;
+
+  /**
+   * Username for basic authentication (required for username-password authentication)
+   * For TFS on-premises, this may include domain (e.g., DOMAIN\username)
+   */
+  username?: string;
+
+  /**
+   * Password for basic authentication (required for username-password authentication)
+   */
+  password?: string;
 }
 
 /**
@@ -66,6 +83,9 @@ export async function createAuthClient(config: AuthConfig): Promise<WebApi> {
     switch (config.method) {
       case AuthenticationMethod.PersonalAccessToken:
         client = await createPatClient(config);
+        break;
+      case AuthenticationMethod.UsernamePassword:
+        client = await createUsernamePasswordClient(config);
         break;
       case AuthenticationMethod.AzureIdentity:
         client = await createAzureIdentityClient(config);
@@ -146,6 +166,32 @@ async function createAzureIdentityClient(config: AuthConfig): Promise<WebApi> {
       `Failed to acquire Azure Identity token: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
+}
+
+/**
+ * Creates a client using username/password basic authentication
+ *
+ * @param config Authentication configuration
+ * @returns Authenticated WebApi client
+ * @throws {AzureDevOpsAuthenticationError} If username/password is missing or authentication fails
+ */
+async function createUsernamePasswordClient(
+  config: AuthConfig,
+): Promise<WebApi> {
+  if (!config.username || !config.password) {
+    throw new AzureDevOpsAuthenticationError(
+      'Username and password are required for username-password authentication',
+    );
+  }
+
+  // Create authentication handler using username/password
+  const authHandler = new UsernamePasswordAuthHandler(
+    config.username,
+    config.password,
+  );
+
+  // Create API client with the auth handler
+  return new WebApi(config.organizationUrl, authHandler);
 }
 
 /**

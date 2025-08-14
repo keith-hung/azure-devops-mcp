@@ -44,6 +44,7 @@ The server uses a feature-based architecture where each feature area (like work-
 - Azure DevOps account with appropriate access
 - Authentication credentials (see [Authentication Guide](docs/authentication.md) for details):
   - Personal Access Token (PAT), or
+  - Username/Password (for TFS/Azure DevOps Server on-premises), or
   - Azure Identity credentials, or
   - Azure CLI login
 
@@ -92,6 +93,26 @@ Be sure you are logged in to Azure CLI with `az login` then add the following:
 }
 ```
 
+#### Username/Password Authentication (TFS/Azure DevOps Server On-Premises)
+
+```json
+{
+  "mcpServers": {
+    "azureDevOps": {
+      "command": "npx",
+      "args": ["-y", "@tiberriver256/mcp-server-azure-devops"],
+      "env": {
+        "AZURE_DEVOPS_ORG_URL": "https://tfs.company.com:8080/tfs/DefaultCollection",
+        "AZURE_DEVOPS_AUTH_METHOD": "username-password",
+        "AZURE_DEVOPS_USERNAME": "DOMAIN\\username",
+        "AZURE_DEVOPS_PASSWORD": "<YOUR_PASSWORD>",
+        "AZURE_DEVOPS_DEFAULT_PROJECT": "your-project-name"
+      }
+    }
+  }
+}
+```
+
 For detailed configuration instructions and more authentication options, see the [Authentication Guide](docs/authentication.md).
 
 ## Authentication Methods
@@ -100,9 +121,10 @@ This server supports multiple authentication methods for connecting to Azure Dev
 
 ### Supported Authentication Methods
 
-1. **Personal Access Token (PAT)** - Simple token-based authentication
-2. **Azure Identity (DefaultAzureCredential)** - Flexible authentication using the Azure Identity SDK
-3. **Azure CLI** - Authentication using your Azure CLI login
+1. **Personal Access Token (PAT)** - Simple token-based authentication for Azure DevOps Cloud
+2. **Username/Password** - Basic authentication for TFS/Azure DevOps Server on-premises environments
+3. **Azure Identity (DefaultAzureCredential)** - Flexible authentication using the Azure Identity SDK
+4. **Azure CLI** - Authentication using your Azure CLI login
 
 Example configuration files for each authentication method are available in the [examples directory](docs/examples/).
 
@@ -114,9 +136,11 @@ Key environment variables include:
 
 | Variable                       | Description                                                                        | Required                     | Default          |
 | ------------------------------ | ---------------------------------------------------------------------------------- | ---------------------------- | ---------------- |
-| `AZURE_DEVOPS_AUTH_METHOD`     | Authentication method (`pat`, `azure-identity`, or `azure-cli`) - case-insensitive | No                           | `azure-identity` |
-| `AZURE_DEVOPS_ORG_URL`         | Full URL to your Azure DevOps organization                                         | Yes                          | -                |
+| `AZURE_DEVOPS_AUTH_METHOD`     | Authentication method (`pat`, `username-password`, `azure-identity`, or `azure-cli`) | No                           | `azure-identity` |
+| `AZURE_DEVOPS_ORG_URL`         | Full URL to your Azure DevOps organization or TFS server                           | Yes                          | -                |
 | `AZURE_DEVOPS_PAT`             | Personal Access Token (for PAT auth)                                               | Only with PAT auth           | -                |
+| `AZURE_DEVOPS_USERNAME`        | Username for basic auth (for username-password auth)                               | Only with username-password  | -                |
+| `AZURE_DEVOPS_PASSWORD`        | Password for basic auth (for username-password auth)                               | Only with username-password  | -                |
 | `AZURE_DEVOPS_DEFAULT_PROJECT` | Default project if none specified                                                  | No                           | -                |
 | `AZURE_DEVOPS_API_VERSION`     | API version to use                                                                 | No                           | Latest           |
 | `AZURE_TENANT_ID`              | Azure AD tenant ID (for service principals)                                        | Only with service principals | -                |
