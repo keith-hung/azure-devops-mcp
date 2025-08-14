@@ -683,6 +683,18 @@ export async function getAuthorizationHeader(): Promise<string> {
       return `Basic ${base64Token}`;
     }
 
+    // For username/password authentication (TFS on-premises)
+    if (
+      process.env.AZURE_DEVOPS_AUTH_METHOD?.toLowerCase() ===
+        'username-password' &&
+      process.env.AZURE_DEVOPS_USERNAME &&
+      process.env.AZURE_DEVOPS_PASSWORD
+    ) {
+      const credentials = `${process.env.AZURE_DEVOPS_USERNAME}:${process.env.AZURE_DEVOPS_PASSWORD}`;
+      const base64Credentials = Buffer.from(credentials).toString('base64');
+      return `Basic ${base64Credentials}`;
+    }
+
     // For Azure Identity / Azure CLI auth, we need to get a token
     // using the Azure DevOps resource ID
     // Choose the appropriate credential based on auth method

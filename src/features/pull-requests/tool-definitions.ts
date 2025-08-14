@@ -6,6 +6,7 @@ import {
   GetPullRequestCommentsSchema,
   AddPullRequestCommentSchema,
   UpdatePullRequestSchema,
+  ListPullRequestsByProjectSchema,
 } from './schemas';
 
 /**
@@ -21,6 +22,11 @@ export const pullRequestsTools: ToolDefinition[] = [
     name: 'list_pull_requests',
     description: 'List pull requests in a repository',
     inputSchema: zodToJsonSchema(ListPullRequestsSchema),
+  },
+  {
+    name: 'list_pull_requests_by_project',
+    description: 'List pull requests across all repositories in a project',
+    inputSchema: zodToJsonSchema(ListPullRequestsByProjectSchema),
   },
   {
     name: 'get_pull_request_comments',

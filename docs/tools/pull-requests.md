@@ -381,6 +381,248 @@ The `list_pull_requests` tool:
 
 This implementation provides a robust and flexible way to retrieve pull requests from Azure DevOps repositories while preventing infinite loop issues.
 
+## list_pull_requests_by_project
+
+Lists pull requests across all repositories within a project with optional filtering.
+
+### Description
+
+The `list_pull_requests_by_project` tool retrieves pull requests from all repositories within a specified Azure DevOps project. Unlike `list_pull_requests` which is scoped to a single repository, this tool provides a project-wide view of pull requests across all repositories. It supports filtering by status (active, completed, abandoned), creator, reviewer, and source/target branches. This tool is particularly useful for project managers, DevOps teams, and automated workflows that need to monitor pull request activity across an entire project.
+
+### Parameters
+
+```json
+{
+  "projectId": "MyProject", // Optional: The ID or name of the project (default: configured default project)
+  "organizationId": "MyOrg", // Optional: The ID or name of the organization (default: configured default organization)
+  "status": "active", // Optional: The status of pull requests to return (active, completed, abandoned, all)
+  "creatorId": "a8a8a8a8-a8a8-a8a8-a8a8-a8a8a8a8a8a8", // Optional: Filter by creator ID (must be a UUID)
+  "reviewerId": "b9b9b9b9-b9b9-b9b9-b9b9-b9b9b9b9b9b9", // Optional: Filter by reviewer ID (must be a UUID)
+  "sourceRefName": "refs/heads/feature-branch", // Optional: Filter by source branch name
+  "targetRefName": "refs/heads/main", // Optional: Filter by target branch name
+  "top": 10, // Optional: Maximum number of pull requests to return (default: 10)
+  "skip": 0 // Optional: Number of pull requests to skip for pagination
+}
+```
+
+| Parameter        | Type   | Required | Description                                                                         |
+| ---------------- | ------ | -------- | ----------------------------------------------------------------------------------- |
+| `projectId`      | string | No       | The ID or name of the project (uses configured default if not provided)            |
+| `organizationId` | string | No       | The ID or name of the organization (uses configured default if not provided)       |
+| `status`         | string | No       | The status of pull requests to return: "active", "completed", "abandoned", or "all" |
+| `creatorId`      | string | No       | Filter pull requests by creator ID (must be a UUID)                                |
+| `reviewerId`     | string | No       | Filter pull requests by reviewer ID (must be a UUID)                               |
+| `sourceRefName`  | string | No       | Filter pull requests by source branch name                                         |
+| `targetRefName`  | string | No       | Filter pull requests by target branch name                                         |
+| `top`            | number | No       | Maximum number of pull requests to return (default: 10)                           |
+| `skip`           | number | No       | Number of pull requests to skip for pagination                                     |
+
+### Response
+
+The tool returns an object containing:
+
+- `count`: The number of pull requests returned
+- `value`: An array of `PullRequest` objects from across all repositories in the project
+- `hasMoreResults`: A boolean indicating if there are more results available
+- `warning`: A message with pagination guidance (only present when hasMoreResults is true)
+
+Each pull request in the `value` array contains:
+
+- `pullRequestId`: The unique identifier of the pull request
+- `title`: The title of the pull request
+- `status`: The status of the pull request (active, abandoned, completed)
+- `repository`: Information about the repository containing the pull request (including repository name and ID)
+- `createdBy`: Information about the user who created the pull request
+- `creationDate`: The date and time when the pull request was created
+- `sourceRefName`: The source branch name
+- `targetRefName`: The target branch name
+- And various other fields and references
+
+Example response:
+
+```json
+{
+  "count": 3,
+  "value": [
+    {
+      "repository": {
+        "id": "repo-guid-1",
+        "name": "WebApp",
+        "project": {
+          "id": "project-guid",
+          "name": "MyProject"
+        }
+      },
+      "pullRequestId": 42,
+      "codeReviewId": 42,
+      "status": 1,
+      "createdBy": {
+        "displayName": "John Doe",
+        "uniqueName": "john.doe@example.com"
+      },
+      "creationDate": "2023-01-01T12:00:00Z",
+      "title": "Update authentication flow",
+      "description": "Implement OAuth 2.0 authentication",
+      "sourceRefName": "refs/heads/auth-update",
+      "targetRefName": "refs/heads/main",
+      "mergeStatus": 3,
+      "isDraft": false,
+      "url": "https://dev.azure.com/organization/MyProject/_apis/git/repositories/WebApp/pullRequests/42"
+    },
+    {
+      "repository": {
+        "id": "repo-guid-2",
+        "name": "API",
+        "project": {
+          "id": "project-guid",
+          "name": "MyProject"
+        }
+      },
+      "pullRequestId": 25,
+      "codeReviewId": 25,
+      "status": 1,
+      "createdBy": {
+        "displayName": "Jane Smith",
+        "uniqueName": "jane.smith@example.com"
+      },
+      "creationDate": "2023-01-02T09:15:00Z",
+      "title": "Add new API endpoints",
+      "description": "Implement user management endpoints",
+      "sourceRefName": "refs/heads/user-endpoints",
+      "targetRefName": "refs/heads/develop",
+      "mergeStatus": 3,
+      "isDraft": true,
+      "url": "https://dev.azure.com/organization/MyProject/_apis/git/repositories/API/pullRequests/25"
+    },
+    {
+      "repository": {
+        "id": "repo-guid-3",
+        "name": "Database",
+        "project": {
+          "id": "project-guid",
+          "name": "MyProject"
+        }
+      },
+      "pullRequestId": 8,
+      "codeReviewId": 8,
+      "status": 1,
+      "createdBy": {
+        "displayName": "Alex Chen",
+        "uniqueName": "alex.chen@example.com"
+      },
+      "creationDate": "2023-01-03T16:45:00Z",
+      "title": "Database schema migration",
+      "description": "Add tables for user preferences",
+      "sourceRefName": "refs/heads/schema-update",
+      "targetRefName": "refs/heads/main",
+      "mergeStatus": 3,
+      "isDraft": false,
+      "url": "https://dev.azure.com/organization/MyProject/_apis/git/repositories/Database/pullRequests/8"
+    }
+  ],
+  "hasMoreResults": false
+}
+```
+
+### Error Handling
+
+The tool may throw the following errors:
+
+- ValidationError: If required parameters are missing or invalid
+- AuthenticationError: If authentication fails
+- PermissionError: If the user doesn't have permission to list pull requests in the project
+- ResourceNotFoundError: If the project or organization doesn't exist
+- GeneralError: For other unexpected errors
+
+Error messages will include details about what went wrong and suggestions for resolution.
+
+### Example Usage
+
+```typescript
+// List all active pull requests across all repositories in a project
+const projectPRs = await mcpClient.callTool('list_pull_requests_by_project', {
+  projectId: 'MyProject',
+  status: 'active',
+});
+console.log(`Found ${projectPRs.count} active pull requests across all repositories`);
+
+// List pull requests created by a specific user across the project
+const userPRs = await mcpClient.callTool('list_pull_requests_by_project', {
+  projectId: 'MyProject',
+  creatorId: 'a8a8a8a8-a8a8-a8a8-a8a8-a8a8a8a8a8a8',
+});
+console.log(`Found ${userPRs.count} pull requests created by this user`);
+
+// List pull requests targeting the main branch across all repositories
+const mainPRs = await mcpClient.callTool('list_pull_requests_by_project', {
+  targetRefName: 'refs/heads/main',
+  top: 20,
+});
+console.log(`Found ${mainPRs.count} pull requests targeting main branch`);
+
+// List all pull requests with pagination
+const firstPage = await mcpClient.callTool('list_pull_requests_by_project', {
+  projectId: 'MyProject',
+  top: 5,
+  skip: 0,
+});
+
+// Check if there are more results and get the next page
+let secondPage = { count: 0, value: [] };
+if (firstPage.hasMoreResults) {
+  secondPage = await mcpClient.callTool('list_pull_requests_by_project', {
+    projectId: 'MyProject',
+    top: 5,
+    skip: 5,
+  });
+}
+
+console.log(`Retrieved ${firstPage.count + secondPage.count} pull requests in 2 pages`);
+
+// Group pull requests by repository for analysis
+firstPage.value.forEach(pr => {
+  console.log(`Repository: ${pr.repository.name} - PR #${pr.pullRequestId}: ${pr.title}`);
+});
+```
+
+### Use Cases
+
+The `list_pull_requests_by_project` tool is particularly useful for:
+
+1. **Project Management**: Get an overview of all pending code reviews across the entire project
+2. **DevOps Automation**: Monitor pull request activity for deployment pipelines
+3. **Team Productivity**: Analyze pull request patterns across multiple repositories
+4. **Cross-Repository Dependencies**: Identify related pull requests across different repositories
+5. **Compliance and Auditing**: Track all code changes across the project for governance
+6. **Dashboard Integration**: Feed pull request data into project dashboards and reports
+
+### Comparison with list_pull_requests
+
+| Feature | list_pull_requests | list_pull_requests_by_project |
+|---------|-------------------|-------------------------------|
+| Scope | Single repository | All repositories in project |
+| Repository ID Required | Yes | No |
+| Use Case | Repository-specific monitoring | Project-wide monitoring |
+| Performance | Faster (single repo) | May be slower (multiple repos) |
+| Repository Information | Same for all results | Varies per result |
+
+### Implementation Details
+
+The `list_pull_requests_by_project` tool:
+
+1. Establishes a connection to Azure DevOps using the provided credentials
+2. Uses the Azure DevOps REST API directly (via axios) rather than the azure-devops-node-api library to access project-level pull request queries
+3. Constructs the appropriate API URL for project-level pull request queries
+4. Maps filter parameters to Azure DevOps API search criteria format
+5. Handles authentication by extracting and forwarding authentication headers from the connection
+6. Supports all the same filtering options as the single-repository version
+7. Includes pagination support with `top` and `skip` parameters
+8. Returns enhanced response with count, results, pagination metadata, and warnings
+9. Preserves repository information for each pull request to identify its source
+10. Handles errors gracefully and provides meaningful error messages
+
+This implementation provides a comprehensive project-wide view of pull request activity while maintaining the same filtering and pagination capabilities as the repository-specific tool.
+
 ## get_pull_request_comments
 
 Gets comments and comment threads from a specific pull request.

@@ -219,3 +219,5 @@ export const UpdatePullRequestSchema = z.object({
     .optional()
     .describe('Additional properties to update on the pull request'),
 });
+
+export { ListPullRequestsByProjectSchema } from './list-pull-requests-by-project/schema';

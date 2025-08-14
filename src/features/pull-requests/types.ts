@@ -67,6 +67,20 @@ export interface ListPullRequestsOptions {
 }
 
 /**
+ * Options for listing pull requests by project (across all repositories)
+ */
+export interface ListPullRequestsByProjectOptions {
+  projectId: string;
+  status?: 'all' | 'active' | 'completed' | 'abandoned';
+  creatorId?: string;
+  reviewerId?: string;
+  sourceRefName?: string;
+  targetRefName?: string;
+  top?: number;
+  skip?: number;
+}
+
+/**
  * Options for getting pull request comments
  */
 export interface GetPullRequestCommentsOptions {
