@@ -1,11 +1,11 @@
 import { WebApi } from 'azure-devops-node-api';
 import axios from 'axios';
-import { DefaultAzureCredential, AzureCliCredential } from '@azure/identity';
 import {
   AzureDevOpsError,
   AzureDevOpsResourceNotFoundError,
   AzureDevOpsValidationError,
   AzureDevOpsPermissionError,
+  AzureDevOpsAuthenticationError,
 } from '../../../shared/errors';
 import {
   SearchWikiOptions,
@@ -59,7 +59,7 @@ export async function searchWiki(
     }
 
     // Get the authorization header from the connection
-    const authHeader = await getAuthorizationHeader();
+    const authHeader = await getAuthHeaderFromConnection(connection);
 
     // Extract organization and project from the connection URL
     const { organization, project } = extractOrgAndProject(
@@ -152,47 +152,55 @@ function extractOrgAndProject(
 }
 
 /**
- * Get the authorization header from the connection
+ * Extracts authorization header from WebApi connection
+ * This is a workaround since search APIs require direct HTTP calls
  *
- * @returns The authorization header
+ * @param connection The WebApi connection
+ * @returns Authorization header value
  */
-async function getAuthorizationHeader(): Promise<string> {
+async function getAuthHeaderFromConnection(
+  connection: WebApi,
+): Promise<string> {
   try {
-    // For PAT authentication, we can construct the header directly
-    if (
-      process.env.AZURE_DEVOPS_AUTH_METHOD?.toLowerCase() === 'pat' &&
-      process.env.AZURE_DEVOPS_PAT
-    ) {
-      // For PAT auth, we can construct the Basic auth header directly
-      const token = process.env.AZURE_DEVOPS_PAT;
-      const base64Token = Buffer.from(`:${token}`).toString('base64');
+    // Access the internal authentication handler from the connection
+    const authHandler = (connection as any).authHandler;
+
+    if (!authHandler) {
+      throw new AzureDevOpsAuthenticationError(
+        'Unable to extract authentication information from connection',
+      );
+    }
+
+    // For PAT authentication, create Basic Auth header
+    if (authHandler.token) {
+      const base64Token = Buffer.from(`:${authHandler.token}`).toString(
+        'base64',
+      );
       return `Basic ${base64Token}`;
     }
 
-    // For Azure Identity / Azure CLI auth, we need to get a token
-    // using the Azure DevOps resource ID
-    // Choose the appropriate credential based on auth method
-    const credential =
-      process.env.AZURE_DEVOPS_AUTH_METHOD?.toLowerCase() === 'azure-cli'
-        ? new AzureCliCredential()
-        : new DefaultAzureCredential();
-
-    // Azure DevOps resource ID for token acquisition
-    const AZURE_DEVOPS_RESOURCE_ID = '499b84ac-1321-427f-aa17-267ca6975798';
-
-    // Get token for Azure DevOps
-    const token = await credential.getToken(
-      `${AZURE_DEVOPS_RESOURCE_ID}/.default`,
-    );
-
-    if (!token || !token.token) {
-      throw new Error('Failed to acquire token for Azure DevOps');
+    // For bearer token authentication
+    if (authHandler.accessToken) {
+      return `Bearer ${authHandler.accessToken}`;
     }
 
-    return `Bearer ${token.token}`;
+    // For username/password authentication, create Basic Auth header
+    if (authHandler.username && authHandler.password) {
+      const credentials = Buffer.from(
+        `${authHandler.username}:${authHandler.password}`,
+      ).toString('base64');
+      return `Basic ${credentials}`;
+    }
+
+    throw new AzureDevOpsAuthenticationError(
+      'Unable to determine authentication method from connection',
+    );
   } catch (error) {
-    throw new AzureDevOpsValidationError(
-      `Failed to get authorization header: ${error instanceof Error ? error.message : String(error)}`,
+    if (error instanceof AzureDevOpsAuthenticationError) {
+      throw error;
+    }
+    throw new AzureDevOpsAuthenticationError(
+      `Failed to extract authentication from connection: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }

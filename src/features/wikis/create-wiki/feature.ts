@@ -50,7 +50,7 @@ export interface CreateWikiOptions {
 /**
  * Create a new wiki in Azure DevOps
  *
- * @param _connection The Azure DevOps WebApi connection (deprecated, kept for backward compatibility)
+ * @param connection The Azure DevOps WebApi connection
  * @param options Options for creating a wiki
  * @returns The created wiki
  * @throws {AzureDevOpsValidationError} When required parameters are missing
@@ -59,7 +59,7 @@ export interface CreateWikiOptions {
  * @throws {AzureDevOpsError} When an error occurs while creating the wiki
  */
 export async function createWiki(
-  _connection: WebApi,
+  _connection: WebApi, // TODO: Use this connection for REST API calls
   options: CreateWikiOptions,
 ) {
   try {
@@ -78,7 +78,8 @@ export async function createWiki(
       );
     }
 
-    // Get the Wiki client
+    // TODO: Use connection.rest API calls instead of legacy client
+    // For now, use the legacy client implementation
     const wikiClient = await getWikiClient({
       organizationId: options.organizationId,
     });

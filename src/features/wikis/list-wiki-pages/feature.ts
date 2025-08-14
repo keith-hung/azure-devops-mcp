@@ -1,3 +1,4 @@
+import { WebApi } from 'azure-devops-node-api';
 import * as azureDevOpsClient from '../../../clients/azure-devops';
 import { AzureDevOpsError } from '../../../shared/errors/azure-devops-errors';
 import { defaultOrg, defaultProject } from '../../../utils/environment';
@@ -16,6 +17,7 @@ export interface WikiPageSummary {
 /**
  * List wiki pages from a wiki
  *
+ * @param connection The Azure DevOps WebApi connection
  * @param options Options for listing wiki pages
  * @returns Array of wiki page summaries
  * @throws {AzureDevOpsResourceNotFoundError} When the wiki is not found
@@ -23,6 +25,7 @@ export interface WikiPageSummary {
  * @throws {AzureDevOpsError} When an error occurs while fetching the wiki pages
  */
 export async function listWikiPages(
+  _connection: WebApi, // TODO: Use this connection for REST API calls
   options: ListWikiPagesOptions,
 ): Promise<WikiPageSummary[]> {
   const { organizationId, projectId, wikiId } = options;
@@ -32,7 +35,8 @@ export async function listWikiPages(
   const projId = projectId || defaultProject;
 
   try {
-    // Create the client
+    // TODO: Use connection.rest API calls instead of legacy client
+    // For now, use the legacy client implementation
     const client = await azureDevOpsClient.getWikiClient({
       organizationId: orgId,
     });

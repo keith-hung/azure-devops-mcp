@@ -68,7 +68,7 @@ export const handleWikisRequest: RequestHandler = async (
     }
     case 'get_wiki_page': {
       const args = GetWikiPageSchema.parse(request.params.arguments);
-      const result = await getWikiPage({
+      const result = await getWikiPage(connection, {
         organizationId: args.organizationId ?? defaultOrg,
         projectId: args.projectId ?? defaultProject,
         wikiId: args.wikiId,
@@ -94,7 +94,7 @@ export const handleWikisRequest: RequestHandler = async (
     }
     case 'update_wiki_page': {
       const args = UpdateWikiPageSchema.parse(request.params.arguments);
-      const result = await updateWikiPage({
+      const result = await updateWikiPage(connection, {
         organizationId: args.organizationId ?? defaultOrg,
         projectId: args.projectId ?? defaultProject,
         wikiId: args.wikiId,
@@ -108,7 +108,7 @@ export const handleWikisRequest: RequestHandler = async (
     }
     case 'list_wiki_pages': {
       const args = ListWikiPagesSchema.parse(request.params.arguments);
-      const result = await listWikiPages({
+      const result = await listWikiPages(connection, {
         organizationId: args.organizationId ?? defaultOrg,
         projectId: args.projectId ?? defaultProject,
         wikiId: args.wikiId,
@@ -119,7 +119,7 @@ export const handleWikisRequest: RequestHandler = async (
     }
     case 'create_wiki_page': {
       const args = CreateWikiPageSchema.parse(request.params.arguments);
-      const result = await createWikiPage({
+      const result = await createWikiPage(connection, {
         organizationId: args.organizationId ?? defaultOrg,
         projectId: args.projectId ?? defaultProject,
         wikiId: args.wikiId,
