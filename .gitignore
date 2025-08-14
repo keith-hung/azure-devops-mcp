@@ -33,4 +33,5 @@ logs/
 *.log
 
 # Claude Code settings
-.claude/settings.local.json 
+.claude/settings.local.json
+CLAUDE.md
