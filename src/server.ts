@@ -471,6 +471,8 @@ export async function getConnection(
       method: config.authMethod || AuthenticationMethod.AzureIdentity,
       organizationUrl: config.organizationUrl,
       personalAccessToken: config.personalAccessToken,
+      username: config.username,
+      password: config.password,
     });
 
     // Test the connection by getting the Core API
