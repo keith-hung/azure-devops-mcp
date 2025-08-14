@@ -37,6 +37,10 @@ export function normalizeAuthMethod(
     return AuthenticationMethod.AzureIdentity;
   } else if (normalizedMethod === AuthenticationMethod.AzureCli.toLowerCase()) {
     return AuthenticationMethod.AzureCli;
+  } else if (
+    normalizedMethod === AuthenticationMethod.UsernamePassword.toLowerCase()
+  ) {
+    return AuthenticationMethod.UsernamePassword;
   }
 
   // If not recognized, log a warning and use the default
@@ -55,6 +59,8 @@ function getConfig(): AzureDevOpsConfig {
   AZURE_DEVOPS_ORG_URL: ${process.env.AZURE_DEVOPS_ORG_URL || 'NOT SET'}
   AZURE_DEVOPS_AUTH_METHOD: ${process.env.AZURE_DEVOPS_AUTH_METHOD || 'NOT SET'}
   AZURE_DEVOPS_PAT: ${process.env.AZURE_DEVOPS_PAT ? 'SET (hidden)' : 'NOT SET'}
+  AZURE_DEVOPS_USERNAME: ${process.env.AZURE_DEVOPS_USERNAME || 'NOT SET'}
+  AZURE_DEVOPS_PASSWORD: ${process.env.AZURE_DEVOPS_PASSWORD ? 'SET (hidden)' : 'NOT SET'}
   AZURE_DEVOPS_DEFAULT_PROJECT: ${process.env.AZURE_DEVOPS_DEFAULT_PROJECT || 'NOT SET'}
   AZURE_DEVOPS_API_VERSION: ${process.env.AZURE_DEVOPS_API_VERSION || 'NOT SET'}
   NODE_ENV: ${process.env.NODE_ENV || 'NOT SET'}
@@ -64,6 +70,8 @@ function getConfig(): AzureDevOpsConfig {
     organizationUrl: process.env.AZURE_DEVOPS_ORG_URL || '',
     authMethod: normalizeAuthMethod(process.env.AZURE_DEVOPS_AUTH_METHOD),
     personalAccessToken: process.env.AZURE_DEVOPS_PAT,
+    username: process.env.AZURE_DEVOPS_USERNAME,
+    password: process.env.AZURE_DEVOPS_PASSWORD,
     defaultProject: process.env.AZURE_DEVOPS_DEFAULT_PROJECT,
     apiVersion: process.env.AZURE_DEVOPS_API_VERSION,
   };

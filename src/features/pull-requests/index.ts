@@ -2,6 +2,7 @@ export * from './schemas';
 export * from './types';
 export * from './create-pull-request';
 export * from './list-pull-requests';
+export * from './list-pull-requests-by-project';
 export * from './get-pull-request-comments';
 export * from './add-pull-request-comment';
 export * from './update-pull-request';
@@ -20,11 +21,13 @@ import { defaultProject } from '../../utils/environment';
 import {
   CreatePullRequestSchema,
   ListPullRequestsSchema,
+  ListPullRequestsByProjectSchema,
   GetPullRequestCommentsSchema,
   AddPullRequestCommentSchema,
   UpdatePullRequestSchema,
   createPullRequest,
   listPullRequests,
+  listPullRequestsByProject,
   getPullRequestComments,
   addPullRequestComment,
   updatePullRequest,
@@ -40,6 +43,7 @@ export const isPullRequestsRequest: RequestIdentifier = (
   return [
     'create_pull_request',
     'list_pull_requests',
+    'list_pull_requests_by_project',
     'get_pull_request_comments',
     'add_pull_request_comment',
     'update_pull_request',
@@ -75,6 +79,28 @@ export const handlePullRequestsRequest: RequestHandler = async (
         {
           projectId: params.projectId ?? defaultProject,
           repositoryId: params.repositoryId,
+          status: params.status,
+          creatorId: params.creatorId,
+          reviewerId: params.reviewerId,
+          sourceRefName: params.sourceRefName,
+          targetRefName: params.targetRefName,
+          top: params.top,
+          skip: params.skip,
+        },
+      );
+      return {
+        content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
+      };
+    }
+    case 'list_pull_requests_by_project': {
+      const params = ListPullRequestsByProjectSchema.parse(
+        request.params.arguments,
+      );
+      const result = await listPullRequestsByProject(
+        connection,
+        params.projectId ?? defaultProject,
+        {
+          projectId: params.projectId ?? defaultProject,
           status: params.status,
           creatorId: params.creatorId,
           reviewerId: params.reviewerId,
